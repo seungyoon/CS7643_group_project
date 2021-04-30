@@ -234,7 +234,7 @@ def train_transformer():
 
 
 def test():
-    best_model = TransformerModel(ntokens, ntokens, nhid, enc_layers=nlayers, dec_layers=nlayers, dropout=dropout).to(device)
+    best_model = TransformerModel(model_type, ntokens, ntokens, nhid, enc_layers=nlayers, dec_layers=nlayers, dropout=dropout).to(device)
     best_model.load_state_dict(torch.load(best_model_pt))
 
     test_loss = evaluate(best_model, criterion, test_iter)
@@ -243,7 +243,7 @@ def test():
 
 
 def validate(iterator):
-    best_model = TransformerModel(ntokens, ntokens, nhid, enc_layers=nlayers, dec_layers=nlayers, dropout=dropout).to(device)
+    best_model = TransformerModel(model_type, ntokens, ntokens, nhid, enc_layers=nlayers, dec_layers=nlayers, dropout=dropout).to(device)
     best_model.load_state_dict(torch.load(best_model_pt))
     model.eval()
 
