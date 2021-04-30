@@ -25,8 +25,15 @@ args = len(sys.argv)
 if args > 1:
     cmdargs = str(sys.argv)
 
-print(cmdargs)
-config.data_size = cmdargs[1]
+    print(cmdargs)
+    print(cmdargs[1])
+    data_size = cmdargs[1]
+    print("args:" data_size)
+else:
+    data_size = config.data_size
+    print(data_size)
+     
+
 
 """
 Preparing Data
@@ -38,7 +45,7 @@ TARGET = Field(sequential=True, tokenize=tokenize, init_token='<sos>', eos_token
 datafields = [("input", INPUT), ("target", TARGET)]
 
 trn, vld, tst = TabularDataset.splits(
-        path="data/" + config.data_size,
+        path="data/" + data_size,
         train=train_csv, validation=validation_csv, test=test_csv,
         format='csv',
         skip_header=True,
