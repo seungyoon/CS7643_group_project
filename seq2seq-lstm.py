@@ -20,6 +20,12 @@ best_model_pt = 'Seq2SeqModel-LSTM-' + task + '.pt'
 
 BATCH_SIZE = config.batch_size
 
+# override data_size
+args = len(sys.argv)
+if args > 1:
+    cmdargs = str(sys.argv)
+config.data_size = cmdargs[1]
+
 """
 Preparing Data
 """
