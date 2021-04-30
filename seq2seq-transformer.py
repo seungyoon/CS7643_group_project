@@ -92,8 +92,8 @@ class TransformerModel(nn.Module):
         self.decoder = nn.Embedding(outtoken, emsize)
         self.pos_decoder = PositionalEncoding(emsize, dropout, config.max_len)
 
-        #self.transformer = nn.Transformer(d_model=emsize, nhead=nhead, num_encoder_layers=enc_layers, num_decoder_layers=dec_layers, dim_feedforward=hidden*4, dropout=dropout, activation='relu')
-        self.transformer = VanillaTransformer()
+        self.transformer = nn.Transformer(d_model=emsize, nhead=nhead, num_encoder_layers=enc_layers, num_decoder_layers=dec_layers, dim_feedforward=hidden*4, dropout=dropout, activation='relu')
+        #self.transformer = VanillaTransformer()
         self.fc_out = nn.Linear(emsize, outtoken)
 
         self.src_mask = None
