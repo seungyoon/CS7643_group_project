@@ -25,6 +25,7 @@
 	Sequence  Accuracy: 0.000 | Number of Sequences :  1280 |  Sequence Match :     0 <br>
 	Character Accuracy: 0.010 | Number of Characters: 640000 |  Character Match:  6191 <br>
 ##### copy
+<br>
 ------------ scopy small Task Result ------------<br>
 	Sequence  Accuracy: 0.812 | Number of Sequences :   128 |  Sequence Match :   104 <br>
 	Character Accuracy: 0.975 | Number of Characters:  1024 |  Character Match:   998 <br>
@@ -37,6 +38,7 @@
 	Sequence  Accuracy: 0.000 | Number of Sequences :  1280 |  Sequence Match :     0<br>
 	Character Accuracy: 0.024 | Number of Characters: 640000 |  Character Match: 15043<br>
 ##### rev
+<br>
 ------------ rev small Task Result ------------<br>
 	Sequence  Accuracy: 0.000 | Number of Sequences :   128 |  Sequence Match :     0<br>
 	Character Accuracy: 0.195 | Number of Characters:  1024 |  Character Match:   200<br>
