@@ -1,4 +1,5 @@
 #### LSTM
+
 ##### badd
 ------------ badd small Task Result ------------ <br>
 	Sequence  Accuracy: 1.000 | Number of Sequences :   128 |  Sequence Match :   128 <br>
@@ -11,6 +12,7 @@
 ------------ badd large Task Result ------------<br>
 	Sequence  Accuracy: 0.000 | Number of Sequences :   128 |  Sequence Match :     0 <br>
 	Character Accuracy: 0.091 | Number of Characters: 64000 |  Character Match:  5802 <br>
+
 ##### add
 <br>
 ------------ add small Task Result ------------<br>
@@ -24,7 +26,8 @@
 ------------ add large Task Result ------------<br>
 	Sequence  Accuracy: 0.000 | Number of Sequences :  1280 |  Sequence Match :     0 <br>
 	Character Accuracy: 0.010 | Number of Characters: 640000 |  Character Match:  6191 <br>
-##### copy
+
+##### scopy
 <br>
 ------------ scopy small Task Result ------------<br>
 	Sequence  Accuracy: 0.812 | Number of Sequences :   128 |  Sequence Match :   104 <br>
@@ -37,6 +40,7 @@
 ------------ scopy large Task Result ------------<br>
 	Sequence  Accuracy: 0.000 | Number of Sequences :  1280 |  Sequence Match :     0<br>
 	Character Accuracy: 0.024 | Number of Characters: 640000 |  Character Match: 15043<br>
+
 ##### rev
 <br>
 ------------ rev small Task Result ------------<br>
@@ -50,3 +54,4 @@
 ------------ rev large Task Result ------------<br>
 	Sequence  Accuracy: 0.000 | Number of Sequences :  1280 |  Sequence Match :     0<br>
 	Character Accuracy: 0.028 | Number of Characters: 640000 |  Character Match: 17646<br>
+<br>
