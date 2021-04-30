@@ -267,14 +267,14 @@ def validate(iterator):
             # statistics
             num_examples += raw.shape[0]
             sequence_length += len(raw[0][1:-1])
-            character_count += sequence_length * num_examples
+            character_count += len(raw[0][1:-1]) * raw.shape[0]
 
             for i in range(raw.shape[0]):
                 # sequence accuracy
                 comparison = raw[i][1:-1] == predict[i][1:-1]
                 if comparison.all():
                     sequence_match += 1
-                    character_match += sequence_length
+                    character_match += len(raw[0][1:-1])
                 else:
                     character_match += np.count_nonzero(comparison)
 
