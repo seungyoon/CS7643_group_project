@@ -12,20 +12,24 @@ import config
 """
 Config - Copy, Reverse or Addition
 """
+# overrite Transformer Type
+args = len(sys.argv)
+model_type = config.model_type
+if args > 1:
+    model_type = str(sys.argv[1])
 # override data_size
 data_size = config.data_size
-args = len(sys.argv)
-if args > 1:
-    data_size = str(sys.argv[1])
+if args > 2:
+    data_size = str(sys.argv[2])
 # override task
 task = config.task
-if args > 2:
-    task = str(sys.argv[2])
+if args > 3:
+    task = str(sys.argv[3])
 
 train_csv = task + '-train.csv'
 validation_csv = task + '-validation.csv'
 test_csv = task + '-test.csv'
-best_model_pt = 'TransformerModel-' + task + '.pt'
+best_model_pt = 'TransformerModel-' + model_type + '-' + task + '.pt'
 BATCH_SIZE = config.batch_size
 if data_size == 'large':
     BATCH_SIZE = config.batch_size * 10
@@ -82,7 +86,7 @@ class PositionalEncoding(nn.Module):
         return self.dropout(x)
 
 class TransformerModel(nn.Module):
-    def __init__(self, intoken, outtoken, hidden, enc_layers=3, dec_layers=1, dropout=0.1):
+    def __init__(self, model_type, intoken, outtoken, hidden, enc_layers=3, dec_layers=1, dropout=0.1):
         super(TransformerModel, self).__init__()
         nhead = hidden//64
         
@@ -92,9 +96,10 @@ class TransformerModel(nn.Module):
         self.decoder = nn.Embedding(outtoken, emsize)
         #self.pos_decoder = PositionalEncoding(emsize, dropout, config.max_len)
 
-        #self.transformer = nn.Transformer(d_model=emsize, nhead=nhead, num_encoder_layers=enc_layers, num_decoder_layers=dec_layers, dim_feedforward=hidden*4, dropout=dropout, activation='relu')
-        self.transformer = VanillaTransformer(d_model=emsize, nhead=nhead, num_encoder_layers=enc_layers, num_decoder_layers=dec_layers, dim_feedforward=hidden*4, dropout=dropout, activation='relu')
-        #self.transformer = VanillaTransformer()
+        if model_type == "Vanilla":
+            self.transformer = VanillaTransformer(d_model=emsize, nhead=nhead, num_encoder_layers=enc_layers, num_decoder_layers=dec_layers, dim_feedforward=hidden*4, dropout=dropout, activation='relu')
+        elif model_type == "Universal":
+            self.transformer = UniversalTransformer(d_model=emsize, nhead=nhead, num_encoder_layers=enc_layers, num_decoder_layers=dec_layers, dim_feedforward=hidden*4, dropout=dropout, activation='relu')
         self.fc_out = nn.Linear(emsize, outtoken)
 
         self.src_mask = None
@@ -215,7 +220,7 @@ def train_transformer():
         epoch_mins, epoch_secs = epoch_time(start_time, end_time)
     
         if epoch == 0:
-            print("\n------------ " + task + " " + data_size + " task ------------")
+            print("\n------------ " + model_type + " " +  task + " " + data_size + " task ------------")
         print(f"Epoch: {epoch+1:02} | Time {epoch_mins}m {epoch_secs}s")
         print(f"\tTrain Loss: {train_loss:.3f}")
         print(f"\tValid Loss: {valid_loss:.3f}")
@@ -292,7 +297,7 @@ def validate(iterator):
         else:
             character_match += np.count_nonzero(comparison)
 
-    print("\n------------ " + task + " " + data_size + " Task Result ------------")
+    print("\n------------ " + model_type + " " + task + " " + data_size + " Task Result ------------")
     print(f"\tSequence  Accuracy: {sequence_match/num_examples:3.3f} | Number of Sequences : {num_examples:5d} |  Sequence Match : {sequence_match:5d}")
     print(f"\tCharacter Accuracy: {character_match/character_count:3.3f} | Number of Characters: {character_count:5d} |  Character Match: {character_match:5d}")
     return

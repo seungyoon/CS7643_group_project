@@ -17,7 +17,8 @@ encoder_dropout = 0.5
 decoder_dropout = 0.5
 num_epochs = 10
 
-# Transformer : Attention is all you need
+# Transformers
+model_type = "Universal"
 num_epochs = 10
 num_layer = 6
 num_heads = 8
