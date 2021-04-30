@@ -45,9 +45,9 @@ trn, vld, tst = TabularDataset.splits(
         skip_header=True,
         fields=datafields)
 
-print(f"Number of " + data_size + " training examples: {len(trn.examples)}")
-print(f"Number of " + data_size + " validation examples: {len(vld.examples)}")
-print(f"Number of " + data_size + " test examples: {len(tst.examples)}")
+print(f"Number of {data_size} training examples: {len(trn.examples)}")
+print(f"Number of {data_size} validation examples: {len(vld.examples)}")
+print(f"Number of {data_size} test examples: {len(tst.examples)}")
 
 INPUT.build_vocab(trn)
 TARGET.build_vocab(trn)
