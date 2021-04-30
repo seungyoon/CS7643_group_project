@@ -146,7 +146,7 @@ nlayers = config.num_layer # the number of nn.TransformerEncoderLayer in nn.Tran
 #nhead = config.num_heads # the number of heads in the multiheadattention models
 dropout = config.encoder_dropout # the dropout value
 
-model = TransformerModel(ntokens, ntokens, nhid, enc_layers=nlayers, dec_layers=nlayers, dropout=dropout).to(device)
+model = TransformerModel(model_type, ntokens, ntokens, nhid, enc_layers=nlayers, dec_layers=nlayers, dropout=dropout).to(device)
 
 def init_weights(m):
     for name, param in m.named_parameters():
