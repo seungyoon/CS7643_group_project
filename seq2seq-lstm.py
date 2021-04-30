@@ -30,7 +30,7 @@ TARGET = Field(sequential=True, tokenize=tokenize, init_token='<sos>', eos_token
 datafields = [("input", INPUT), ("target", TARGET)]
 
 trn, vld, tst = TabularDataset.splits(
-        path="data/" + data_size,
+        path="data/" + config.data_size,
         train=train_csv, validation=validation_csv, test=test_csv,
         format='csv',
         skip_header=True,
