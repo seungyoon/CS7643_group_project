@@ -24,16 +24,10 @@ BATCH_SIZE = config.batch_size
 args = len(sys.argv)
 if args > 1:
     cmdargs = str(sys.argv)
-
-    print(cmdargs)
-    print(str(sys.argv[1]))
     data_size = str(sys.argv[1])
-    print("args:", data_size)
 else:
     data_size = config.data_size
-    print(data_size)
      
-
 
 """
 Preparing Data
@@ -51,9 +45,9 @@ trn, vld, tst = TabularDataset.splits(
         skip_header=True,
         fields=datafields)
 
-print(f"Number of training examples: {len(trn.examples)}")
-print(f"Number of validation examples: {len(vld.examples)}")
-print(f"Number of test examples: {len(tst.examples)}")
+print(f"Number of " + data_size + " training examples: {len(trn.examples)}")
+print(f"Number of " + data_size + " validation examples: {len(vld.examples)}")
+print(f"Number of " + data_size + " test examples: {len(tst.examples)}")
 
 INPUT.build_vocab(trn)
 TARGET.build_vocab(trn)
@@ -306,7 +300,7 @@ def train_seq2seq():
             torch.save(model.state_dict(), best_model_pt)
 
         if epoch == 0:
-            print("\n------------ " + task + " " + config.data_size + " task ------------")
+            print("\n------------ " + task + " " + data_size + " task ------------")
         print(f"Epoch: {epoch+1:02} | Time {epoch_mins}m {epoch_secs}s")
         print(f"\tTrain Loss: {train_loss:.3f} | Train PPL: {math.exp(train_loss):7.3f}")
         print(f"\tValid Loss: {valid_loss:.3f} | Valid PPL: {math.exp(valid_loss):7.3f}")
@@ -373,7 +367,7 @@ def validate(iterator):
         else:
             character_match += np.count_nonzero(comparison)
 
-    print("\n------------ " + task + " " + config.data_size + " Task Result ------------")
+    print("\n------------ " + task + " " + data_size + " Task Result ------------")
     print(f"\tSequence  Accuracy: {sequence_match/num_examples:3.3f} | Number of Sequences : {num_examples:5d} |  Sequence Match : {sequence_match:5d}")
     print(f"\tCharacter Accuracy: {character_match/character_count:3.3f} | Number of Characters: {character_count:5d} |  Character Match: {character_match:5d}")
     return
