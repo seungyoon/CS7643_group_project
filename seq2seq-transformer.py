@@ -87,10 +87,10 @@ class TransformerModel(nn.Module):
         nhead = hidden//64
         
         self.encoder = nn.Embedding(intoken, emsize)
-        self.pos_encoder = PositionalEncoding(emsize, dropout, config.max_len)
+        #self.pos_encoder = PositionalEncoding(emsize, dropout, config.max_len)
 
         self.decoder = nn.Embedding(outtoken, emsize)
-        self.pos_decoder = PositionalEncoding(emsize, dropout, config.max_len)
+        #self.pos_decoder = PositionalEncoding(emsize, dropout, config.max_len)
 
         #self.transformer = nn.Transformer(d_model=emsize, nhead=nhead, num_encoder_layers=enc_layers, num_decoder_layers=dec_layers, dim_feedforward=hidden*4, dropout=dropout, activation='relu')
         self.transformer = VanillaTransformer(d_model=emsize, nhead=nhead, num_encoder_layers=enc_layers, num_decoder_layers=dec_layers, dim_feedforward=hidden*4, dropout=dropout, activation='relu')
@@ -117,10 +117,10 @@ class TransformerModel(nn.Module):
         trg_pad_mask = self.make_len_mask(trg)
 
         src = self.encoder(src)
-        src = self.pos_encoder(src)
+        #src = self.pos_encoder(src)
 
         trg = self.decoder(trg)
-        trg = self.pos_decoder(trg)
+        #trg = self.pos_decoder(trg)
 
         output = self.transformer(src, trg, src_mask=self.src_mask, tgt_mask=self.trg_mask, memory_mask=self.memory_mask,
                                   src_key_padding_mask=src_pad_mask, tgt_key_padding_mask=trg_pad_mask, memory_key_padding_mask=src_pad_mask)
