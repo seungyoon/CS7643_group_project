@@ -24,6 +24,8 @@ BATCH_SIZE = config.batch_size
 args = len(sys.argv)
 if args > 1:
     cmdargs = str(sys.argv)
+
+print(cmdargs)
 config.data_size = cmdargs[1]
 
 """
