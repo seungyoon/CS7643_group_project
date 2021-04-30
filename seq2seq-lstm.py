@@ -11,23 +11,23 @@ import config
 """
 Config - Copy, Reverse or Addition
 """
+# override data_size
+data_size = config.data_size
+args = len(sys.argv)
+if args > 1:
+    data_size = str(sys.argv[1])
+# override task
 task = config.task
+if args > 2:
+    task = str(sys.argv[2])
 
 train_csv = task + '-train.csv'
 validation_csv = task + '-validation.csv'
 test_csv = task + '-test.csv'
 best_model_pt = 'Seq2SeqModel-LSTM-' + task + '.pt'
-
 BATCH_SIZE = config.batch_size
-
-# override data_size
-args = len(sys.argv)
-if args > 1:
-    cmdargs = str(sys.argv)
-    data_size = str(sys.argv[1])
-else:
-    data_size = config.data_size
-     
+if data_size == 'large':
+    BATCH_SIZE = config.batch_size * 10
 
 """
 Preparing Data
@@ -215,7 +215,7 @@ print(f'The model has {count_parameters(model):,} trainable parameters')
 optimizer = optim.Adam(model.parameters())
 criterion = nn.CrossEntropyLoss()
 
-def train(model, iterator, optimizer, criterion, clip):
+def train(model, iterator, optimizer, criterion):
     model.train()
     epoch_loss = 0
     
@@ -238,7 +238,7 @@ def train(model, iterator, optimizer, criterion, clip):
         
         loss.backward()
         
-        torch.nn.utils.clip_grad_norm_(model.parameters(), clip)
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 1)
         
         optimizer.step()
         
@@ -281,7 +281,6 @@ def epoch_time(start_time, end_time):
 
 def train_seq2seq():
     N_EPOCHS = config.num_epochs
-    CLIP = 1
 
     best_valid_loss = float('inf')
 
@@ -289,7 +288,7 @@ def train_seq2seq():
     
         start_time = time.time()
     
-        train_loss = train(model, train_iter, optimizer, criterion, CLIP)
+        train_loss = train(model, train_iter, optimizer, criterion)
         valid_loss = evaluate(model, valid_iter, criterion)
     
         end_time = time.time()
