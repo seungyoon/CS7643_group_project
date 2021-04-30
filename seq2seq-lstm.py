@@ -26,8 +26,8 @@ if args > 1:
     cmdargs = str(sys.argv)
 
     print(cmdargs)
-    print(cmdargs[1])
-    data_size = cmdargs[1]
+    print(str(sys.argv[1]))
+    data_size = str(sys.argv[1])
     print("args:", data_size)
 else:
     data_size = config.data_size
