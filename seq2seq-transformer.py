@@ -269,7 +269,7 @@ def validate(iterator):
             sequence_length += len(raw[0][1:-1])
             character_count += sequence_length * num_examples
 
-            for i in range(num_examples):
+            for i in range(raw.shape[0]):
                 # sequence accuracy
                 comparison = raw[i][1:-1] == predict[i][1:-1]
                 if comparison.all():
