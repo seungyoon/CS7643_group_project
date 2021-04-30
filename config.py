@@ -1,9 +1,9 @@
 #task = 'add'
-#task = 'reverse'
-#task = 'copy'
+#task = 'rev'
+#task = 'scopy'
 task = 'badd'
 
-data_size = 'small'
+data_size = 'middle'
 
 # LSTM
 model = "LSTM"

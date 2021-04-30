@@ -1,58 +1,42 @@
 import generators
+import sys
 
-# Add - Long binary addition (badd)
-# least-significant bit left.
-# 2 -> 1, 1 -> 0, 11 -> +, 0 -> end_token
+def data_to_csv(filename, example):
+    input, target, taskid = example
+    input = input.astype(int)
+    with open(filename, 'w+') as f:
+        sys.stdout = f
+        print("input,target")
+        length = len(input)
 
-length = 40
-test_length = 400
-
-# Binary Add
-#example = generators.generators['badd'].get_batch(length,20480*10)
-#example = generators.generators['badd'].get_batch(length,2560*10)
-example = generators.generators['badd'].get_batch(test_length,2560*10)
-
-# Add
-#example = generators.generators['add'].get_batch(8,20480)
-#example = generators.generators['add'].get_batch(8,2560)
-#example = generators.generators['add'].get_batch(8,2560)
-
-# Reverse
-#example = generators.generators['rev'].get_batch(8,20480)
-#example = generators.generators['rev'].get_batch(8,2560)
-#example = generators.generators['rev'].get_batch(8,2560)
-
-# Copy
-#example = generators.generators['scopy'].get_batch(8,20480)
-#example = generators.generators['scopy'].get_batch(8,2560)
-#example = generators.generators['scopy'].get_batch(8,2560)
-
-input, target, taskid = example
-input = input.astype(int)
-
-#print(input[0])
-#print(target[0])
-#print(input[1])
-#print(target[1])
-#exit(0)
-
-
-print("input,target")
-length = len(input)
-
-for i in range(length):
-#    print("<sos> ", end="")
-    for num in input[i][0]:
-        print(num, end=' ')
+        for i in range(length):
+            for num in input[i][0]:
+                print(num, end=' ')
     
-#    print('<eos>, <sos>', end=' ')
-    print(',', end=' ')
+            print(',', end=' ')
 
-    for num in target[i]:
-        print(num, end=' ')
+            for num in target[i]:
+                print(num, end=' ')
 
-#    print("<eos>")
-    print("")
+            print("")
 
-#print(input)
-#print(target)
+for data_size in ['small', 'middle', 'large']:
+    if data_size == 'small':
+        length, test_length = 8, 8
+        train_data_size, val_test_data_size = 20480, 2560
+    elif data_size == 'middle':
+        length, test_length = 40, 40
+        train_data_size, val_test_data_size = 20480, 2560
+    elif data_size == 'large':
+        length, test_length = 40, 400
+        train_data_size, val_test_data_size = 204800, 25600
+    for task in ['badd', 'add', 'rev', 'scopy']:  # binary add, add, reverse, copy
+        # train
+        example = generators.generators[task].get_batch(length, train_data_size)
+        data_to_csv("data/" + data_size + '/' + task + '-train.csv', example)
+        # validataion
+        example = generators.generators[task].get_batch(length, val_test_data_size)
+        data_to_csv("data/" + data_size + '/' + task + '-validation.csv', example)
+        # test
+        example = generators.generators[task].get_batch(test_length, val_test_data_size)
+        data_to_csv("data/" + data_size + '/' + task + '-test.csv', example)
