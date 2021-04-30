@@ -300,10 +300,7 @@ def train_seq2seq():
 
         if epoch == 0:
             print("\n------------ " + task + " " + data_size + " task ------------")
-        print(f"Epoch: {epoch+1:02} | Time {epoch_mins}m {epoch_secs}s")
-        print(f"\tTrain Loss: {train_loss:.3f} | Train PPL: {math.exp(train_loss):7.3f}")
-        print(f"\tValid Loss: {valid_loss:.3f} | Valid PPL: {math.exp(valid_loss):7.3f}")
-
+        print(f"Epoch: {epoch+1:02} | Time {epoch_mins}m {epoch_secs}s\tTrain Loss: {train_loss:.3f}\tValid Loss: {valid_loss:.3f}")
 
 def test():
     best_model = Seq2Seq(encoder, decoder, device).to(device)
@@ -312,7 +309,6 @@ def test():
     test_loss = evaluate(model, test_iter, criterion)
     
     print(f"Test Loss : {test_loss:.3f} | Test PPL: {math.exp(test_loss):7.3f}")
-
 
 def validate(iterator):
     best_model = Seq2Seq(encoder, decoder, device).to(device)

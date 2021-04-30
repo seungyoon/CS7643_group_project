@@ -198,11 +198,7 @@ def train_transformer():
     
         if epoch == 0:
             print("\n------------ " + model_type + " " +  task + " " + data_size + " task ------------")
-        #print(f"Epoch: {epoch+1:02} | Time {epoch_mins}m {epoch_secs}s")
-        #print(f"\tTrain Loss: {train_loss:.3f}")
-        #print(f"\tValid Loss: {valid_loss:.3f}")
         print(f"Epoch: {epoch+1:02} | Time {epoch_mins}m {epoch_secs}s\tTrain Loss: {train_loss:.3f}\tValid Loss: {valid_loss:.3f}")
-    
     
         if valid_loss < best_valid_loss:
             best_valid_loss = valid_loss
