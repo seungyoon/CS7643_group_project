@@ -316,6 +316,12 @@ def validate(iterator):
     model.eval()
     
     epoch_loss = 0
+
+    num_examples = 0
+    sequence_length = 0
+    character_count = 0
+    sequence_match = 0
+    character_match = 0
     
     with torch.no_grad():
         
@@ -328,39 +334,36 @@ def validate(iterator):
             target = trg.transpose(1,0)
             output = output.transpose(1,0)
 
-            break # run only for the first batch, ... for now
+            #break # run only for the first batch, ... for now
 
-    np.set_printoptions(threshold=sys.maxsize)
-    torch.set_printoptions(profile="full")
+            np.set_printoptions(threshold=sys.maxsize)
+            torch.set_printoptions(profile="full")
 
-    input = np.array([list(map(lambda x: INPUT.vocab.itos[x], source[i])) for i in range(source.shape[0])])
-    #print("\nsource:\n", input)
+            input = np.array([list(map(lambda x: INPUT.vocab.itos[x], source[i])) for i in range(source.shape[0])])
+            #print("\nsource:\n", input)
 
-    raw = np.array([list(map(lambda x: TARGET.vocab.itos[x], target[i])) for i in range(target.shape[0])])
-    #print("\ntarget:\n", raw)
+            raw = np.array([list(map(lambda x: TARGET.vocab.itos[x], target[i])) for i in range(target.shape[0])])
+            #print("\ntarget:\n", raw)
 
-    token_trans = np.argmax(output.cpu().numpy(), axis = 2)
-    predict = np.array([list(map(lambda x: TARGET.vocab.itos[x], token_trans[i])) for i in range(token_trans.shape[0])])
-    #print("\nprediction:\n", predict)
+            token_trans = np.argmax(output.cpu().numpy(), axis = 2)
+            predict = np.array([list(map(lambda x: TARGET.vocab.itos[x], token_trans[i])) for i in range(token_trans.shape[0])])
+            #print("\nprediction:\n", predict)
 
-    torch.set_printoptions(profile="default")
+            torch.set_printoptions(profile="default")
 
-    # statistics
-    num_examples = raw.shape[0] 
-    sequence_length = len(raw[0][1:-1])
-    character_count = sequence_length * num_examples
+            # statistics
+            num_examples += raw.shape[0]
+            sequence_length += len(raw[0][1:-1])
+            character_count += len(raw[0][1:-1]) * raw.shape[0]
 
-    sequence_match = 0
-    character_match = 0
-
-    for i in range(num_examples):
-        # sequence accuracy
-        comparison = raw[i][1:-1] == predict[i][1:-1]
-        if comparison.all():
-            sequence_match += 1
-            character_match += sequence_length
-        else:
-            character_match += np.count_nonzero(comparison)
+            for i in range(raw.shape[0]):
+                # sequence accuracy
+                comparison = raw[i][1:-1] == predict[i][1:-1]
+                if comparison.all():
+                    sequence_match += 1
+                    character_match += len(raw[0][1:-1])
+                else:
+                    character_match += np.count_nonzero(comparison)
 
     print("\n------------ " + task + " " + data_size + " Task Result ------------")
     print(f"\tSequence  Accuracy: {sequence_match/num_examples:3.3f} | Number of Sequences : {num_examples:5d} |  Sequence Match : {sequence_match:5d}")
