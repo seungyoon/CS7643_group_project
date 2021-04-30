@@ -92,7 +92,8 @@ class TransformerModel(nn.Module):
         self.decoder = nn.Embedding(outtoken, emsize)
         self.pos_decoder = PositionalEncoding(emsize, dropout, config.max_len)
 
-        self.transformer = nn.Transformer(d_model=emsize, nhead=nhead, num_encoder_layers=enc_layers, num_decoder_layers=dec_layers, dim_feedforward=hidden*4, dropout=dropout, activation='relu')
+        #self.transformer = nn.Transformer(d_model=emsize, nhead=nhead, num_encoder_layers=enc_layers, num_decoder_layers=dec_layers, dim_feedforward=hidden*4, dropout=dropout, activation='relu')
+        self.transformer = VanillaTransformer(d_model=emsize, nhead=nhead, num_encoder_layers=enc_layers, num_decoder_layers=dec_layers, dim_feedforward=hidden*4, dropout=dropout, activation='relu')
         #self.transformer = VanillaTransformer()
         self.fc_out = nn.Linear(emsize, outtoken)
 
@@ -263,14 +264,14 @@ def validate(iterator):
     torch.set_printoptions(profile="full")
 
     input = np.array([list(map(lambda x: INPUT.vocab.itos[x], source[i])) for i in range(source.shape[0])])
-    print("\nsource:\n", input)
+    #print("\nsource:\n", input)
 
     raw = np.array([list(map(lambda x: TARGET.vocab.itos[x], target[i])) for i in range(target.shape[0])])
-    print("\ntarget:\n", raw)
+    #print("\ntarget:\n", raw)
 
     token_trans = np.argmax(output.cpu().numpy(), axis = 2)
     predict = np.array([list(map(lambda x: TARGET.vocab.itos[x], token_trans[i])) for i in range(token_trans.shape[0])])
-    print("\nprediction:\n", predict)
+    #print("\nprediction:\n", predict)
 
     torch.set_printoptions(profile="default")
 
