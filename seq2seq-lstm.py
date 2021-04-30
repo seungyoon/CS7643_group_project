@@ -4,7 +4,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torchtext.data import TabularDataset, Field, BucketIterator
+from torchtext.legacy.data import TabularDataset, Field, BucketIterator
 
 import config
 
