@@ -291,7 +291,7 @@ def train_seq2seq():
             torch.save(model.state_dict(), best_model_pt)
 
         if epoch == 0:
-            print("\n------------ " + task + " task ------------")
+            print("\n------------ " + task + " " + config.data_size + " task ------------")
         print(f"Epoch: {epoch+1:02} | Time {epoch_mins}m {epoch_secs}s")
         print(f"\tTrain Loss: {train_loss:.3f} | Train PPL: {math.exp(train_loss):7.3f}")
         print(f"\tValid Loss: {valid_loss:.3f} | Valid PPL: {math.exp(valid_loss):7.3f}")
@@ -358,7 +358,7 @@ def validate(iterator):
         else:
             character_match += np.count_nonzero(comparison)
 
-    print("\n------------ " + task + " Task Result ------------")
+    print("\n------------ " + task + " " + config.data_size + " Task Result ------------")
     print(f"\tSequence  Accuracy: {sequence_match/num_examples:3.3f} | Number of Sequences : {num_examples:5d} |  Sequence Match : {sequence_match:5d}")
     print(f"\tCharacter Accuracy: {character_match/character_count:3.3f} | Number of Characters: {character_count:5d} |  Character Match: {character_match:5d}")
     return
