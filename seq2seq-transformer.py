@@ -1,26 +1,34 @@
-import sys, time, random, math, string
+import io, sys, time, random, math, string
 import numpy as np
 
-import io
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torchtext.data import TabularDataset, Field, BucketIterator
+from torchtext.legacy.data import TabularDataset, Field, BucketIterator
+from transformers import VanillaTransformer, UniversalTransformer
 
 import config
 
 """
 Config - Copy, Reverse or Addition
 """
+# override data_size
+data_size = config.data_size
+args = len(sys.argv)
+if args > 1:
+    data_size = str(sys.argv[1])
+# override task
 task = config.task
+if args > 2:
+    task = str(sys.argv[2])
 
 train_csv = task + '-train.csv'
 validation_csv = task + '-validation.csv'
 test_csv = task + '-test.csv'
 best_model_pt = 'TransformerModel-' + task + '.pt'
-
 BATCH_SIZE = config.batch_size
-
+if data_size == 'large':
+    BATCH_SIZE = config.batch_size * 10
 
 """
 Preparing Data
@@ -32,15 +40,15 @@ TARGET = Field(sequential=True, tokenize=tokenize, init_token='<sos>', eos_token
 datafields = [("input", INPUT), ("target", TARGET)]
 
 trn, vld, tst = TabularDataset.splits(
-        path="data", # the root directory where the data lies
+        path="data/" + data_size,
         train=train_csv, validation=validation_csv, test=test_csv,
         format='csv',
         skip_header=True,
         fields=datafields)
 
-print(f"Number of training examples: {len(trn.examples)}")
-print(f"Number of validation examples: {len(vld.examples)}")
-print(f"Number of test examples: {len(tst.examples)}")
+print(f"Number of {data_size} training examples: {len(trn.examples)}")
+print(f"Number of {data_size} validation examples: {len(vld.examples)}")
+print(f"Number of {data_size} test examples: {len(tst.examples)}")
 
 INPUT.build_vocab(trn)
 TARGET.build_vocab(trn)
@@ -84,7 +92,8 @@ class TransformerModel(nn.Module):
         self.decoder = nn.Embedding(outtoken, emsize)
         self.pos_decoder = PositionalEncoding(emsize, dropout, config.max_len)
 
-        self.transformer = nn.Transformer(d_model=emsize, nhead=nhead, num_encoder_layers=enc_layers, num_decoder_layers=dec_layers, dim_feedforward=hidden*4, dropout=dropout, activation='relu')
+        #self.transformer = nn.Transformer(d_model=emsize, nhead=nhead, num_encoder_layers=enc_layers, num_decoder_layers=dec_layers, dim_feedforward=hidden*4, dropout=dropout, activation='relu')
+        self.transformer = VanillaTransformer()
         self.fc_out = nn.Linear(emsize, outtoken)
 
         self.src_mask = None
@@ -205,10 +214,8 @@ def train_transformer():
         epoch_mins, epoch_secs = epoch_time(start_time, end_time)
     
         if epoch == 0:
-            print("\n------------ " + task + " task ------------")
+            print("\n------------ " + task + " " + data_size + " task ------------")
         print(f"Epoch: {epoch+1:02} | Time {epoch_mins}m {epoch_secs}s")
-        #print(f"\tTrain Loss: {train_loss:.3f} | Train PPL: {math.exp(train_loss):7.3f}")
-        #print(f"\tValid Loss: {valid_loss:.3f} | Valid PPL: {math.exp(valid_loss):7.3f}")
         print(f"\tTrain Loss: {train_loss:.3f}")
         print(f"\tValid Loss: {valid_loss:.3f}")
     
@@ -284,7 +291,7 @@ def validate(iterator):
         else:
             character_match += np.count_nonzero(comparison)
 
-    print("\n------------ " + task + " Task Result ------------")
+    print("\n------------ " + task + " " + data_size + " Task Result ------------")
     print(f"\tSequence  Accuracy: {sequence_match/num_examples:3.3f} | Number of Sequences : {num_examples:5d} |  Sequence Match : {sequence_match:5d}")
     print(f"\tCharacter Accuracy: {character_match/character_count:3.3f} | Number of Characters: {character_count:5d} |  Character Match: {character_match:5d}")
     return
