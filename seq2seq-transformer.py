@@ -65,36 +65,15 @@ train_iter, val_iter, test_iter = BucketIterator.splits((trn, vld, tst),
 
 """
 Build Transformer
-https://colab.research.google.com/drive/1g4ZFCGegOmD-xXL-Ggu7K5LVoJeXYJ75#scrollTo=sWsVpbRMKiJc
 """
-class PositionalEncoding(nn.Module):
-    def __init__(self, d_model, dropout=0.1, max_len=5000):
-        super(PositionalEncoding, self).__init__()
-        self.dropout = nn.Dropout(p=dropout)
-        self.scale = nn.Parameter(torch.ones(1))
-        pe = torch.zeros(max_len, d_model)
-        position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
-        div_term = torch.exp(torch.arange(
-            0, d_model, 2).float() * (-math.log(10000.0) / d_model))
-        pe[:, 0::2] = torch.sin(position * div_term)
-        pe[:, 1::2] = torch.cos(position * div_term)
-        pe = pe.unsqueeze(0).transpose(0, 1)
-        self.register_buffer('pe', pe)
-
-    def forward(self, x):
-        x = x + self.scale * self.pe[:x.size(0), :]
-        return self.dropout(x)
-
 class TransformerModel(nn.Module):
     def __init__(self, model_type, intoken, outtoken, hidden, enc_layers=3, dec_layers=1, dropout=0.1):
         super(TransformerModel, self).__init__()
         nhead = hidden//64
         
         self.encoder = nn.Embedding(intoken, emsize)
-        #self.pos_encoder = PositionalEncoding(emsize, dropout, config.max_len)
 
         self.decoder = nn.Embedding(outtoken, emsize)
-        #self.pos_decoder = PositionalEncoding(emsize, dropout, config.max_len)
 
         if model_type == "Vanilla":
             self.transformer = VanillaTransformer(d_model=emsize, nhead=nhead, num_encoder_layers=enc_layers, num_decoder_layers=dec_layers, dim_feedforward=hidden*4, dropout=dropout, activation='relu')
@@ -122,10 +101,8 @@ class TransformerModel(nn.Module):
         trg_pad_mask = self.make_len_mask(trg)
 
         src = self.encoder(src)
-        #src = self.pos_encoder(src)
 
         trg = self.decoder(trg)
-        #trg = self.pos_decoder(trg)
 
         output = self.transformer(src, trg, src_mask=self.src_mask, tgt_mask=self.trg_mask, memory_mask=self.memory_mask,
                                   src_key_padding_mask=src_pad_mask, tgt_key_padding_mask=trg_pad_mask, memory_key_padding_mask=src_pad_mask)
@@ -221,9 +198,10 @@ def train_transformer():
     
         if epoch == 0:
             print("\n------------ " + model_type + " " +  task + " " + data_size + " task ------------")
-        print(f"Epoch: {epoch+1:02} | Time {epoch_mins}m {epoch_secs}s")
-        print(f"\tTrain Loss: {train_loss:.3f}")
-        print(f"\tValid Loss: {valid_loss:.3f}")
+        #print(f"Epoch: {epoch+1:02} | Time {epoch_mins}m {epoch_secs}s")
+        #print(f"\tTrain Loss: {train_loss:.3f}")
+        #print(f"\tValid Loss: {valid_loss:.3f}")
+        print(f"Epoch: {epoch+1:02} | Time {epoch_mins}m {epoch_secs}s\tTrain Loss: {train_loss:.3f}\tValid Loss: {valid_loss:.3f}")
     
     
         if valid_loss < best_valid_loss:
