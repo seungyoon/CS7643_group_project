@@ -52,3 +52,19 @@
 	Sequence  Accuracy: 0.000 | Number of Sequences :  1280 |  Sequence Match :     0<br>
 	Character Accuracy: 0.028 | Number of Characters: 640000 |  Character Match: 17646<br>
 <br>
+
+#### Transformer - Vanilla
+
+##### badd
+------------ Vanilla badd small Task Result ------------<br>
+	Sequence  Accuracy: 0.014 | Number of Sequences :  2560 |  Sequence Match :    37<br>
+	Character Accuracy: 0.758 | Number of Characters: 20480 |  Character Match: 15517<br>
+<br>
+------------ Vanilla badd middle Task Result ------------<br>
+	Sequence  Accuracy: 0.000 | Number of Sequences :  2560 |  Sequence Match :     0<br>
+	Character Accuracy: 0.250 | Number of Characters: 102400 |  Character Match: 25638<br>
+<br>
+
+##### add
+##### scopy
+##### rev

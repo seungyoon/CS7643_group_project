@@ -24,10 +24,10 @@ if args > 2:
 train_csv = task + '-train.csv'
 validation_csv = task + '-validation.csv'
 test_csv = task + '-test.csv'
-best_model_pt = 'Seq2SeqModel-LSTM-' + task + '.pt'
+best_model_pt = 'Seq2SeqModel-LSTM-' + data_size + '-' + task + '.pt'
 BATCH_SIZE = config.batch_size
 if data_size == 'large':
-    BATCH_SIZE = config.batch_size * 10
+    BATCH_SIZE = config.batch_size * 5
 
 """
 Preparing Data

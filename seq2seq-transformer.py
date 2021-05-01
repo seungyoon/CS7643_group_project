@@ -33,10 +33,10 @@ if args > 4:
 train_csv = task + '-train.csv'
 validation_csv = task + '-validation.csv'
 test_csv = task + '-test.csv'
-best_model_pt = 'TransformerModel-' + model_type + '-' + task + '.pt'
+best_model_pt = 'TransformerModel-' + model_type + '-' + data_size + '-' + task + '.pt'
 BATCH_SIZE = config.batch_size
 if data_size == 'large':
-    BATCH_SIZE = config.batch_size * 10
+    BATCH_SIZE = config.batch_size * 5
 
 """
 Preparing Data
