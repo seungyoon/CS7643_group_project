@@ -51,7 +51,7 @@ elif model_type == "Universal":
     wandb.run.name = wandb.run.name + '-UT'
     if transition_type == 'fully_connected':
         wandb.run.name = wandb.run.name + '-fc'
-    elif fully_connected == 'depth_wise_conv':
+    elif transition_type == 'depth_wise_conv':
         wandb.run.name = wandb.run.name + '-dwc'
 wandb.run.save()
 train_loss_key    = "Train loss"
