@@ -82,7 +82,7 @@ class TransformerModel(nn.Module):
         if model_type == "Vanilla":
             self.transformer = VanillaTransformer(d_model=emsize, nhead=nhead, num_encoder_layers=enc_layers, num_decoder_layers=dec_layers, dim_feedforward=hidden*4, dropout=dropout, activation='relu')
         elif model_type == "Universal":
-            self.transformer = UniversalTransformer()
+            self.transformer = UniversalTransformer(d_model=emsize)
             #self.transformer = UniversalTransformer(d_model=emsize, nhead=nhead, dropout=dropout, transition_type=transition_type)
         self.fc_out = nn.Linear(emsize, outtoken)
 
