@@ -196,6 +196,8 @@ N_LAYERS = config.num_layer
 ENC_DROPOUT = config.encoder_dropout
 DEC_DROPOUT = config.decoder_dropout
 
+torch.cuda.manual_seed(seed)
+
 encoder = Encoder(INPUT_DIM, ENC_EMB_DIM, HID_DIM, N_LAYERS, ENC_DROPOUT)
 decoder = Decoder(OUTPUT_DIM, DEC_EMB_DIM, HID_DIM, N_LAYERS, DEC_DROPOUT)
 

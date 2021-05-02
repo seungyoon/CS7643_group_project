@@ -127,6 +127,7 @@ nlayers = config.num_layer # the number of nn.TransformerEncoderLayer in nn.Tran
 #nhead = config.num_heads # the number of heads in the multiheadattention models
 dropout = config.encoder_dropout # the dropout value
 
+torch.cuda.manual_seed(seed)
 model = TransformerModel(model_type, ntokens, ntokens, nhid, enc_layers=nlayers, dec_layers=nlayers, dropout=dropout).to(device)
 
 def init_weights(m):
