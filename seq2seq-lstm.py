@@ -296,7 +296,7 @@ def train_seq2seq():
         end_time = time.time()
         epoch_mins, epoch_secs = epoch_time(start_time, end_time)
     
-        if valid_loss < best_valid_loss:
+        if valid_loss <= best_valid_loss:
             best_valid_loss = valid_loss
             torch.save(model.state_dict(), best_model_pt)
 

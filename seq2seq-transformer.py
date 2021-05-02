@@ -206,7 +206,7 @@ def train_transformer():
             print("\n------------ " + model_type + " " +  task + " " + data_size + " task ------------")
         print(f"Epoch: {epoch+1:02} | Time {epoch_mins}m {epoch_secs}s\tTrain Loss: {train_loss:.3f}\tValid Loss: {valid_loss:.3f}")
     
-        if valid_loss < best_valid_loss:
+        if valid_loss <= best_valid_loss: # save from the later epoch
             best_valid_loss = valid_loss
             torch.save(model.state_dict(), best_model_pt)
     
