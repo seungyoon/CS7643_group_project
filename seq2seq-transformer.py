@@ -44,12 +44,11 @@ WandB
 """
 wandb.init(project='cs7643-gp')
 config = wandb.config
-#train_loss_key = "LSTM-" + data_size + "-" + task + "-train_loss"
-#valid_loss_key = "LSTM-" + data_size + "-" + task + "-valid_loss"
-#test_loss_key = "LSTM-" + data_size + "-" + task + "-test_loss"
-train_loss_key = "train_loss"
-valid_loss_key = "valid_loss"
-test_loss_key = "test_loss"
+train_loss_key    = "Train loss"
+valid_loss_key    = "Validation loss"
+test_loss_key     = "Test loss"
+char_accuracy_key = "Character accuracy"
+seq_accuracy_key  = "Sequence accuracy"
 
 """
 Preparing Data
@@ -302,6 +301,9 @@ def validate(iterator):
     print("\n------------ " + model_type + " " + task + " " + data_size + " Task Result ------------")
     print(f"\tSequence  Accuracy: {sequence_match/num_examples:3.3f} | Number of Sequences : {num_examples:5d} |  Sequence Match : {sequence_match:5d}")
     print(f"\tCharacter Accuracy: {character_match/character_count:3.3f} | Number of Characters: {character_count:5d} |  Character Match: {character_match:5d}")
+
+    wandb.log({seq_accuracy_key:sequence_match/num_examples})
+    wandb.log({char_accuracy_key:character_match/character_count})
     return
 
 
