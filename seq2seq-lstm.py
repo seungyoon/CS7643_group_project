@@ -34,6 +34,7 @@ if data_size == 'large':
 WandB
 """
 wandb.init(project='cs7643-gp')
+wabdb.run.name = task + '-' + data_size + '-LSTM'
 config = wandb.config
 train_loss_key    = "Train loss"
 valid_loss_key    = "Validation loss"
