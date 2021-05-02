@@ -44,6 +44,16 @@ WandB
 """
 wandb.init(project='cs7643-gp')
 config = wandb.config
+wandb.run.name = task + '-' + data_size
+if model_type == "Vanilla":
+    wandb.run.name = wandb.run.name + '-VT'
+elif model_type == "Universal":
+    wandb.run.name = wandb.run.name + '-UT'
+    if transition_type == 'fully_connected':
+        wandb.run.name = wandb.run.name + '-fc'
+    elif fully_connected = 'depth_wise_conv':
+        wandb.run.name = wandb.run.name + '-dwc'
+wandb.run.save()
 train_loss_key    = "Train loss"
 valid_loss_key    = "Validation loss"
 test_loss_key     = "Test loss"
