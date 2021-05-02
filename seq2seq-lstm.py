@@ -35,6 +35,7 @@ WandB
 """
 wandb.init(project='cs7643-gp')
 wandb.run.name = task + '-' + data_size + '-LSTM'
+wandb.run.save()
 config = wandb.config
 train_loss_key    = "Train loss"
 valid_loss_key    = "Validation loss"
