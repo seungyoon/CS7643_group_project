@@ -6,18 +6,22 @@ import torch.nn as nn
 import torch.optim as optim
 from torchtext.legacy.data import TabularDataset, Field, BucketIterator
 
-import config
+import param
+import wandb
+
+wandb.init(project='cs7643-gp')
+config = wandb.config
 
 """
 Config - Copy, Reverse or Addition
 """
 # override data_size
-data_size = config.data_size
+data_size = param.data_size
 args = len(sys.argv)
 if args > 1:
     data_size = str(sys.argv[1])
 # override task
-task = config.task
+task = param.task
 if args > 2:
     task = str(sys.argv[2])
 
@@ -25,9 +29,9 @@ train_csv = task + '-train.csv'
 validation_csv = task + '-validation.csv'
 test_csv = task + '-test.csv'
 best_model_pt = 'Seq2SeqModel-LSTM-' + data_size + '-' + task + '.pt'
-BATCH_SIZE = config.batch_size
+BATCH_SIZE = param.batch_size
 if data_size == 'large':
-    BATCH_SIZE = config.batch_size * 5
+    BATCH_SIZE = param.batch_size * 5
 
 """
 Preparing Data
@@ -189,12 +193,12 @@ Training the Seq2Seq model
 # First initialize our model.
 INPUT_DIM = len(INPUT.vocab)
 OUTPUT_DIM = len(TARGET.vocab)
-ENC_EMB_DIM = config.encoder_embedding_size
-DEC_EMB_DIM = config.decoder_embedding_size
-HID_DIM = config.hidden_size
-N_LAYERS = config.num_layer
-ENC_DROPOUT = config.encoder_dropout
-DEC_DROPOUT = config.decoder_dropout
+ENC_EMB_DIM = param.encoder_embedding_size
+DEC_EMB_DIM = param.decoder_embedding_size
+HID_DIM = param.hidden_size
+N_LAYERS = param.num_layer
+ENC_DROPOUT = param.encoder_dropout
+DEC_DROPOUT = param.decoder_dropout
 
 torch.cuda.manual_seed_all(7643)
 
@@ -282,7 +286,7 @@ def epoch_time(start_time, end_time):
 
 
 def train_seq2seq():
-    N_EPOCHS = config.num_epochs
+    N_EPOCHS = param.num_epochs
 
     best_valid_loss = float('inf')
 
@@ -292,6 +296,9 @@ def train_seq2seq():
     
         train_loss = train(model, train_iter, optimizer, criterion)
         valid_loss = evaluate(model, valid_iter, criterion)
+
+        wandb.log({"train_loss":train_loss})
+        wandb.log({"valid_loss":train_loss})
     
         end_time = time.time()
         epoch_mins, epoch_secs = epoch_time(start_time, end_time)
@@ -309,6 +316,7 @@ def test():
     best_model.load_state_dict(torch.load(best_model_pt))
     
     test_loss = evaluate(model, test_iter, criterion)
+    wandb.log({"test_loss":train_loss})
     
     print(f"Test Loss : {test_loss:.3f} | Test PPL: {math.exp(test_loss):7.3f}")
 
