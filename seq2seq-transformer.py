@@ -144,7 +144,7 @@ print(f'The model has {count_parameters(model):,} trainable parameters')
 
 
 criterion = nn.CrossEntropyLoss()
-lr = 5.0 # learning rate
+lr = 2.0 # learning rate
 optimizer = torch.optim.SGD(model.parameters(), lr=lr)
 #optimizer = torch.optim.Adam(model.parameters(), lr=lr, betas=(0.9, 0.98), eps=1e-09)
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1.0, gamma=0.95)
