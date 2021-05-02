@@ -7,26 +7,27 @@ import torch.nn.functional as F
 from torchtext.legacy.data import TabularDataset, Field, BucketIterator
 from transformers import VanillaTransformer, UniversalTransformer
 
-import config
+import param
+import wandb
 
 """
 Config - Copy, Reverse or Addition
 """
 # overrite Transformer Type
 args = len(sys.argv)
-model_type = config.model_type
+model_type = param.model_type
 if args > 1:
     model_type = str(sys.argv[1])
 # override data_size
-data_size = config.data_size
+data_size = param.data_size
 if args > 2:
     data_size = str(sys.argv[2])
 # override task
-task = config.task
+task = param.task
 if args > 3:
     task = str(sys.argv[3])
 # override transition_type
-transition_type = config.transition_type
+transition_type = param.transition_type
 if args > 4:
     transition_type = str(sys.argv[4])
 
@@ -34,9 +35,21 @@ train_csv = task + '-train.csv'
 validation_csv = task + '-validation.csv'
 test_csv = task + '-test.csv'
 best_model_pt = 'TransformerModel-' + model_type + '-' + data_size + '-' + task + '.pt'
-BATCH_SIZE = config.batch_size
+BATCH_SIZE = param.batch_size
 if data_size == 'large':
-    BATCH_SIZE = config.batch_size * 4
+    BATCH_SIZE = param.batch_size * 4
+
+"""
+WandB
+"""
+wandb.init(project='cs7643-gp')
+config = wandb.config
+#train_loss_key = "LSTM-" + data_size + "-" + task + "-train_loss"
+#valid_loss_key = "LSTM-" + data_size + "-" + task + "-valid_loss"
+#test_loss_key = "LSTM-" + data_size + "-" + task + "-test_loss"
+train_loss_key = "train_loss"
+valid_loss_key = "valid_loss"
+test_loss_key = "test_loss"
 
 """
 Preparing Data
@@ -123,11 +136,11 @@ class TransformerModel(nn.Module):
 Training the Transformer model
 """
 ntokens = len(INPUT.vocab) # the size of vocabulary
-emsize = config.encoder_embedding_size # embedding dimension
-nhid = config.hidden_size # the dimension of the feedforward network model in nn.TransformerEncoder
-nlayers = config.num_layer # the number of nn.TransformerEncoderLayer in nn.TransformerEncoder
-#nhead = config.num_heads # the number of heads in the multiheadattention models
-dropout = config.encoder_dropout # the dropout value
+emsize = param.encoder_embedding_size # embedding dimension
+nhid = param.hidden_size # the dimension of the feedforward network model in nn.TransformerEncoder
+nlayers = param.num_layer # the number of nn.TransformerEncoderLayer in nn.TransformerEncoder
+#nhead = param.num_heads # the number of heads in the multiheadattention models
+dropout = param.encoder_dropout # the dropout value
 
 torch.cuda.manual_seed_all(7643)
 model = TransformerModel(model_type, ntokens, ntokens, nhid, enc_layers=nlayers, dec_layers=nlayers, dropout=dropout).to(device)
@@ -192,13 +205,16 @@ def epoch_time(start_time, end_time):
 
 def train_transformer():
     best_valid_loss = float("inf")
-    N_EPOCHS = config.num_epochs
+    N_EPOCHS = param.num_epochs
 
     for epoch in range(N_EPOCHS):
         start_time = time.time()
 
         train_loss = train(model, optimizer, criterion, train_iter)
         valid_loss = evaluate(model, criterion, val_iter)
+
+        wandb.log({train_loss_key:train_loss})
+        wandb.log({valid_loss_key:train_loss})
 
         end_time = time.time()
         epoch_mins, epoch_secs = epoch_time(start_time, end_time)
@@ -219,6 +235,8 @@ def test():
     best_model.load_state_dict(torch.load(best_model_pt))
 
     test_loss = evaluate(best_model, criterion, test_iter)
+    wandb.log({test_loss_key:test_loss})
+
     #print(f"Test Loss : {test_loss:.3f} | Test PPL: {math.exp(test_loss):7.3f}")
     print(f"Test Loss : {test_loss:.3f}")
 
