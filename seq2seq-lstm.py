@@ -9,9 +9,6 @@ from torchtext.legacy.data import TabularDataset, Field, BucketIterator
 import param
 import wandb
 
-wandb.init(project='cs7643-gp')
-config = wandb.config
-
 """
 Config - Copy, Reverse or Addition
 """
@@ -32,6 +29,18 @@ best_model_pt = 'Seq2SeqModel-LSTM-' + data_size + '-' + task + '.pt'
 BATCH_SIZE = param.batch_size
 if data_size == 'large':
     BATCH_SIZE = param.batch_size * 5
+
+"""
+WandB
+"""
+wandb.init(project='cs7643-gp')
+config = wandb.config
+#train_loss_key = "LSTM-" + data_size + "-" + task + "-train_loss"
+#valid_loss_key = "LSTM-" + data_size + "-" + task + "-valid_loss"
+#test_loss_key = "LSTM-" + data_size + "-" + task + "-test_loss"
+train_loss_key = "train_loss"
+valid_loss_key = "valid_loss"
+test_loss_key = "test_loss"
 
 """
 Preparing Data
@@ -297,8 +306,8 @@ def train_seq2seq():
         train_loss = train(model, train_iter, optimizer, criterion)
         valid_loss = evaluate(model, valid_iter, criterion)
 
-        wandb.log({"train_loss":train_loss})
-        wandb.log({"valid_loss":train_loss})
+        wandb.log({train_loss_key:train_loss})
+        wandb.log({valid_loss_key:train_loss})
     
         end_time = time.time()
         epoch_mins, epoch_secs = epoch_time(start_time, end_time)
@@ -316,7 +325,7 @@ def test():
     best_model.load_state_dict(torch.load(best_model_pt))
     
     test_loss = evaluate(model, test_iter, criterion)
-    wandb.log({"test_loss":train_loss})
+    wandb.log({test_loss_key:test_loss})
     
     print(f"Test Loss : {test_loss:.3f} | Test PPL: {math.exp(test_loss):7.3f}")
 
